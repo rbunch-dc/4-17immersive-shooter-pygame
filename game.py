@@ -6,6 +6,11 @@ import pygame
 from player import Player
 # Import check_events from the game_functions module
 from game_functions import check_events
+# Get the enemy class so we can make new enemies
+from enemy import Enemy
+# Get groupcollide and Group from the sprite module
+from pygame.sprite import Group, groupcollide
+
 
 # The core game functionallity/loop
 def run_game():
@@ -21,16 +26,32 @@ def run_game():
 	# Set a caption on the terminal window
 	pygame.display.set_caption("A heroic 3rd person shooter")
 
-	the_player = Player(screen)
+	the_player = Player(screen,'./images/Hero.png',100,100)
+	the_player_group = Group()
+	the_player_group.add(the_player)
+	bad_guy = Enemy(screen)
+	enemies = Group()
+	enemies.add(bad_guy)
+
 
 	# Main game loop. Run forever... (or until break)
 	while 1:
 		screen.fill(background_color)
 
-		check_events()
+		check_events(the_player)
 
 		# Draw the player
-		the_player.draw_me()
+		for player in the_player_group:
+			player.draw_me()
+
+		# Update and Draw the bad guy
+		bad_guy.update_me(the_player)
+		bad_guy.draw_me()
+
+		# Check for collisions...
+		hero_died = groupcollide(the_player_group, enemies, True, False)
+		print hero_died
+
 
 		# Clear the screen for the next time through the loop
 		pygame.display.flip()
