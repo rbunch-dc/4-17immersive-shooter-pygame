@@ -2,8 +2,10 @@
 import pygame
 # we need sys for quit
 import sys
+# import bullet so we can make a bullet
+from bullet import Bullet
 
-def check_events(the_player):
+def check_events(the_player,screen,bullets):
 	# The escape hatch (from while)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -20,6 +22,11 @@ def check_events(the_player):
 			elif event.key == 275:
 				# print "User pressed right!"
 				the_player.should_move("right", True)
+			elif event.key == 32:
+				# user pressed space bar... FIRE!
+				for direction in range(1,5):
+					new_bullet = Bullet(screen,the_player,direction)
+					bullets.add(new_bullet)
 			# elif event.key == 121:
 			# 	# userpushed "y"
 			# 	hero['x'] = 100

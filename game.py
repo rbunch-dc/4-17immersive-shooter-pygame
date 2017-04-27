@@ -32,25 +32,38 @@ def run_game():
 	bad_guy = Enemy(screen)
 	enemies = Group()
 	enemies.add(bad_guy)
+	bullets = Group()
 
+	tick = 0
 
 	# Main game loop. Run forever... (or until break)
 	while 1:
+		tick += 1
+		if tick % 50 == 0:
+			enemies.add(Enemy(screen))
 		screen.fill(background_color)
 
-		check_events(the_player)
+		check_events(the_player, screen, bullets)
 
 		# Draw the player
 		for player in the_player_group:
 			player.draw_me()
 
 		# Update and Draw the bad guy
-		bad_guy.update_me(the_player)
-		bad_guy.draw_me()
+		for bad_guy in enemies:
+			bad_guy.update_me(the_player)
+			bad_guy.draw_me()
+
+		# Update and draw the bullets
+		for bullet in bullets:
+			bullet.update()
+			bullet.draw_bullet()
 
 		# Check for collisions...
 		hero_died = groupcollide(the_player_group, enemies, True, False)
-		print hero_died
+		# print hero_died
+		bullet_hit = groupcollide(bullets,enemies,True,True)
+		print bullet_hit
 
 
 		# Clear the screen for the next time through the loop
